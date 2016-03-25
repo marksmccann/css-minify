@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CSS Minifyr</title>
+</head>
+<body>
+    <textarea id="input" style="width:500px;height:200px;">
+    </textarea>
+    <textarea id="output" style="width:500px;height:200px;">
+    </textarea>
+    <button id="run">Minify</button>
+    <script src="css-minify.js"></script>
+    <script>
+
+    (function( cssMinify ){
+
+        var input = document.getElementById('input');
+        var output = document.getElementById('output');
+        var button = document.getElementById('run');
+
+        button.addEventListener('click',function(e){
+            e.preventDefault();
+            output.value = cssMinify(input.value);
+        },false);
+
+    })( cssMinify );
+
+    </script>
+</body>
+</html>
