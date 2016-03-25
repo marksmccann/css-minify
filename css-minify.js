@@ -22,7 +22,7 @@ var cssMinify = (function(){
      * default settings for alphabetizer
      */
     var defaults = {
-        lastSemicolon: false,
+        lastSemicolon: true,
         comments: true,
         leadingZeros: true,
         zeroUnits: true
