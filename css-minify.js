@@ -19,7 +19,7 @@ var cssMinify = (function(){
     }
 
     /**
-     * default settings for alphabetizer
+     * default settings for minifier
      */
     var defaults = {
         lastSemicolon: true,
