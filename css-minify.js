@@ -52,7 +52,7 @@ var cssMinify = (function(){
                     .replace(/\s*}\s*$/, '}');
             })
             // standard rules
-            .replace(/[^{}]*{[^{}]*([("'].*['")])*[^{}]*}/g, function(rule) {
+            .replace(/[^{}]*{([^{}("']*([("'][^'")]*['")])?[^{}("']*)*}/g, function(rule) {
                 return rule
                     // the selector
                     .replace(/^[^{]*{/, function(selector){
@@ -67,7 +67,7 @@ var cssMinify = (function(){
                             .replace(/ *\n+ */g, ' ');
                     })
                     // the contents
-                    .replace(/{[^{}]*([("'](.|\n)*['")])*[^{}]*}\s*$/, function(contents){
+                    .replace(/{([^{}("']*([("'][^\'")]*[\'")])?[^{}("']*)*}\s*$/, function(contents){
                         return contents
                             // each declaration
                             .replace(/([\w\s-]*):(([^;'"(}])*(\(["']?[^'")]*['"]?\)|["'][^'"]*['"])?([^;}])*);?\s*/g, function(declaration, property, value){
