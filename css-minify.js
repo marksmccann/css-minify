@@ -38,7 +38,7 @@ var cssMinify = (function(){
             // remove all comments
             .replace(/\/\*((?!\*\/)(.|\n))*\*\//g, '')
             // rules with nested styles
-            .replace(/[^{}]*{([^{}]*{[^{}]*([("'].*['")])*[^{}]*}\s*)*}/g, function(query){
+            .replace(/[^{}]*{(\/\*((?!\*\/)(.|\n))*\*\/|[("'][^\"')]*["')]|[^{}"'])*}*\s*}/g, function(query){
                 return query
                     // query selector
                     .replace(/^[^{]*{/, function(selector){
@@ -52,7 +52,7 @@ var cssMinify = (function(){
                     .replace(/\s*}\s*$/, '}');
             })
             // standard rules
-            .replace(/[^{}]*{([^{}("']*([("'][^'")]*['")])?[^{}("']*)*}/g, function(rule) {
+            .replace(/[^{}]*{(\/\*((?!\*\/)(.|\n))*\*\/|[("'].*["')]|[^{}"'])*}/g, function(rule) {
                 return rule
                     // the selector
                     .replace(/^[^{]*{/, function(selector){
@@ -67,7 +67,7 @@ var cssMinify = (function(){
                             .replace(/ *\n+ */g, ' ');
                     })
                     // the contents
-                    .replace(/{([^{}("']*([("'][^\'")]*[\'")])?[^{}("']*)*}\s*$/, function(contents){
+                    .replace(/{(\/\*((?!\*\/)(.|\n))*\*\/|[("'].*["')]|[^{}"'])*}\s*$/, function(contents){
                         return contents
                             // each declaration
                             .replace(/([\w\s-]*):(([^;'"(}])*(\(["']?[^'")]*['"]?\)|["'][^'"]*['"])?([^;}])*);?\s*/g, function(declaration, property, value){
