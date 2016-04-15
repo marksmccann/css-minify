@@ -24,7 +24,8 @@ var cssMinify = (function(){
     var defaults = {
         lastSemiColon: true,
         leadingZeros: true,
-        zeroUnits: true
+        zeroUnits: true,
+        shortenHex: true
     }
 
     /**
@@ -38,13 +39,17 @@ var cssMinify = (function(){
             // remove all comments
             .replace(/\/\*((?!\*\/)(.|\n))*\*\//g, '')
             // rules with nested styles
-            .replace(/[^{}]*{(\/\*((?!\*\/)(.|\n))*\*\/|[("'][^\"')]*["')]|[^{}"'])*}*\s*}/g, function(query){
+            .replace(/[^{}]*{([^{}]*{(\/\*((?!\*\/)(.|\n))*\*\/|[("'].*["')]|[^{}"'])*})*\s*}/g, function(query){
                 return query
                     // query selector
                     .replace(/^[^{]*{/, function(selector){
                         return selector
                             // remove spaces around open bracket
                             .replace(/\s*{\s*$/,'{')
+                            // remove an spaces inside parenthesis
+                            .replace(/\s+\)/g, ')').replace(/\(\s+/g, '(')
+                            // remove spaces around colons
+                            .replace(/\s*:\s*/g, ':')
                             // remove spaces from start
                             .replace(/^\s*/,'');
                     })
@@ -63,8 +68,12 @@ var cssMinify = (function(){
                             .replace(/^\s*/,'')
                             // remove spaces around combinators
                             .replace(/\s*([>~+,])\s*/g,'$1')
+                            // remove an spaces inside parenthesis
+                            .replace(/\s+\)/g, ')').replace(/\(\s+/g, '(')
                             // reduce decendants to single space
-                            .replace(/ *\n+ */g, ' ');
+                            .replace(/ *\n+ */g, ' ')
+                            // reduce any multiple spaces to one
+                            .replace(/\s{2,}/g, ' ');
                     })
                     // the contents
                     .replace(/{(\/\*((?!\*\/)(.|\n))*\*\/|[("'].*["')]|[^{}"'])*}\s*$/, function(contents){
@@ -82,7 +91,6 @@ var cssMinify = (function(){
                                     })
                                     // value
                                     .replace(value, function(val){
-
                                         return val
                                             // remove spaces from end
                                             .replace(/\s*$/,'')
@@ -90,8 +98,12 @@ var cssMinify = (function(){
                                             .replace(/^\s*/,'')
                                             // remove spaces around certain characters
                                             .replace(/\s*([,])\s*/g, '$1')
+                                            // shorten qualifying hexadecmials
+                                            .replace(/(#([\w\d])\2([\w\d])\3([\w\d])\4)/g, (settings.shortenHex?'#$2$3$4':'$1') )
                                             // remove leading zero if setting set
                                             .replace( /0(\.\d+)/g, (settings.leadingZeros?'':'0')+'$1' )
+                                            // remove any spaces inside parenthesis
+                                            .replace(/\s+\)/g, ')').replace(/\(\s+/g, '(')
                                             // remove units on zeros if setting set
                                             .replace( /0(em|ex|%|px|cm|mm|in|pt|pc|ch|rem|vh|vw|vmin|vmax)/g, '0'+(settings.zeroUnits?'':'$1') );
                                     })
